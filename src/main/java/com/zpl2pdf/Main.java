@@ -18,9 +18,6 @@ public class Main {
         LabelDimensions dimensions = new LabelDimensions(4, 6, "in", 203);
         System.out.println("Dimensions: " + dimensions);
 
-        // 2. Initialize Renderer with Mock Converter
-        LabelRenderer renderer = new LabelRenderer(dimensions, new BinaryKitsZplConverter());
-
         // 3. Define dummy ZPL
         String zplData = "^XA\n" +
                 "\n" +
@@ -63,22 +60,12 @@ public class Main {
                 "^FO470,955^FDCA^FS\n" +
                 "\n" +
                 "^XZ";
-        List<String> zplFiles = Collections.singletonList(zplData);
 
-        // 4. Render to Images (byte arrays)
-        System.out.println("Rendering labels...");
-        List<byte[]> images = renderer.renderLabels(zplFiles);
-        System.out.println("Generated " + images.size() + " image(s).");
-
-        // 5. Generate PDF
-        String outputPdf = "output_test.pdf";
-        int[] pts = dimensions.toPoints();
-        float widthPts = (float) pts[0];
-        float heightPts = (float) pts[1];
-        
-        System.out.println("Generating PDF: " + outputPdf + " (" + widthPts + "x" + heightPts + " pts)");
+        // 4. Render using the new simplified API
+        System.out.println("Rendering label using ZPLRenderer...");
+        String outputPdf = "output_test_new.pdf";
         try {
-            PdfGenerator.generatePdf(images, widthPts, heightPts, outputPdf);
+            ZPLRenderer.renderWithConfig(zplData, ZPLConfig.default4x6(), outputPdf);
             System.out.println("PDF generated successfully at: " + new File(outputPdf).getAbsolutePath());
         } catch (IOException e) {
             System.err.println("Error generating PDF: " + e.getMessage());
