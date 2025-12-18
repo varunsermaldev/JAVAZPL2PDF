@@ -41,12 +41,20 @@ public class GraphicBoxElementDrawer implements ElementDrawer {
         // Real C# logic checks for specific filling conditions.
         // C# : "if (element.BorderThickness * 2 >= element.Width || element.BorderThickness * 2 >= element.Height)" -> Fill
         
+        if (box.isReverseDraw()) {
+            g2d.setXORMode(Color.WHITE);
+        }
+
         if (t * 2 >= w || t * 2 >= h) {
              g2d.fillRect(x, y, w, h);
         } else {
             g2d.setStroke(new BasicStroke(t));
             g2d.drawRect(x, y, w, h);
             g2d.setStroke(new BasicStroke(1));
+        }
+        
+        if (box.isReverseDraw()) {
+            g2d.setPaintMode();
         }
     }
 }

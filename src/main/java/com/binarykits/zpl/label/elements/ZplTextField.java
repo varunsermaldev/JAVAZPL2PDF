@@ -7,6 +7,8 @@ public class ZplTextField extends ZplPositionedElementBase {
     private int fontWidth;
     private String orientation;
     private boolean useFieldOrigin; // True if FO, False if FT
+    private int blockWidth = 0; // For ^FB
+    private String justification = "L"; // L, C, R, J
 
     public ZplTextField(int positionX, int positionY, String text, String fontName, int fontHeight, int fontWidth, boolean useFieldOrigin) {
         super(positionX, positionY, false); 
@@ -15,6 +17,11 @@ public class ZplTextField extends ZplPositionedElementBase {
         this.fontHeight = fontHeight;
         this.fontWidth = fontWidth;
         this.useFieldOrigin = useFieldOrigin;
+    }
+
+    public void setFieldBlock(int blockWidth, String justification) {
+        this.blockWidth = blockWidth;
+        this.justification = justification;
     }
 
     
@@ -32,4 +39,6 @@ public class ZplTextField extends ZplPositionedElementBase {
     public int getFontHeight() { return fontHeight; }
     public int getFontWidth() { return fontWidth; }
     public boolean isUseFieldOrigin() { return useFieldOrigin; }
+    public int getBlockWidth() { return blockWidth; }
+    public String getJustification() { return justification; }
 }

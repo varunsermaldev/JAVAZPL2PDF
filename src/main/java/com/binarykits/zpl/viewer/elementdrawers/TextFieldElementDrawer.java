@@ -25,33 +25,47 @@ public class TextFieldElementDrawer implements ElementDrawer {
             if (fontWidth <= 0) fontWidth = fontSize;
             
             // ZPL Font 0 is Helvetica-like (SansSerif).
-            Font font = new Font(Font.SANS_SERIF, Font.BOLD, fontSize);
+            // Font A is often small and monospaced.
+            Font font;
+            double condensation = 0.75; // Authentic ZPL condensation (approx 15:12 ratio)
+            
+            if ("A".equalsIgnoreCase(tf.getFontName())) {
+                font = new Font(Font.MONOSPACED, Font.BOLD, fontSize);
+                condensation = 0.75; // Font A is also narrow
+            } else {
+                font = new Font(Font.SANS_SERIF, Font.BOLD, fontSize);
+            }
             
             // Calculate Horizontal Scale
-            // Java Font Size ~ Height. 
-            // We want width to match fontWidth.
-            // But 'fontSize' in Java is point size.
-            // Let's rely on affine transform for aspect ratio.
             double scaleX = (double) fontWidth / fontSize;
-            
-            // ZPL fonts are often more condensed than Java standard fonts.
-            // E.g. ^A0N,34,34 -> standard ratio 1.0
-            // But Helvetica Bold at 34pt is wider than ZPL Font 0 at 34,34.
-            // We apply a slight compression factor (0.85) to match Zebra visuals better
-            // based on empirical observation of "cropped text".
             
             if (scaleX > 0) {
                  AffineTransform id = new AffineTransform();
-                 id.scale(scaleX * 0.90, 1.0); // 0.90 fudge factor to match ZPL condensation
+                 id.scale(scaleX * condensation, 1.0); 
                  font = font.deriveFont(id);
             }
             
             g2d.setFont(font);
 
+            if (tf.isReverseDraw()) {
+                g2d.setXORMode(java.awt.Color.WHITE);
+            }
+
             // Positioning Logic
             java.awt.FontMetrics fm = g2d.getFontMetrics();
             int x = tf.getPositionX();
             int y = tf.getPositionY();
+            
+            // FB Centering/Justification
+            if (tf.getBlockWidth() > 0) {
+                // Use precise string bounds to handle scaled fonts correctly
+                double textWidth = font.getStringBounds(tf.getText(), g2d.getFontRenderContext()).getWidth();
+                if ("C".equals(tf.getJustification())) {
+                    x += (int)((tf.getBlockWidth() - textWidth) / 2.0);
+                } else if ("R".equals(tf.getJustification())) {
+                    x += (int)(tf.getBlockWidth() - textWidth);
+                }
+            }
             
             if (tf.isUseFieldOrigin()) {
                 // ^FO: x,y is Top-Left
@@ -65,6 +79,10 @@ public class TextFieldElementDrawer implements ElementDrawer {
             }
 
             g2d.drawString(tf.getText(), x, y);
+            
+            if (tf.isReverseDraw()) {
+                g2d.setPaintMode();
+            }
         }
     }
 }

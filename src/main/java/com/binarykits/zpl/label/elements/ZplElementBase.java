@@ -11,6 +11,20 @@ public abstract class ZplElementBase {
     public List<String> getComments() {
         return comments;
     }
-    
-    // Abstract method to mimic C# behaviour if needed, or just base logic
+
+    public boolean isWhitedraw() {
+        return isWhitedraw;
+    }
+
+    public void setWhitedraw(boolean whitedraw) {
+        isWhitedraw = whitedraw;
+    }
+
+    public boolean isReverseDraw() {
+        return isReverseDraw;
+    }
+
+    public void setReverseDraw(boolean reverseDraw) {
+        isReverseDraw = reverseDraw;
+    }
 }

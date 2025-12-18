@@ -9,4 +9,12 @@ public class ZplBarcode128 extends ZplBarcode {
         this.printInterpretationLine = printInterpretationLine;
         this.printInterpretationLineAbove = printInterpretationLineAbove;
     }
+
+    public boolean isPrintInterpretationLine() {
+        return printInterpretationLine;
+    }
+
+    public boolean isPrintInterpretationLineAbove() {
+        return printInterpretationLineAbove;
+    }
 }

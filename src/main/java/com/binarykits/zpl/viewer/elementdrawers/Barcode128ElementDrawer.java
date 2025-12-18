@@ -8,7 +8,9 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.EnumMap;
 import java.util.Map;
@@ -94,7 +96,38 @@ public class Barcode128ElementDrawer implements ElementDrawer {
             // User snippet uses FO for barcodes: ^FO20,352...
             // So Y is top.
             
+            if (bc.isReverseDraw()) {
+                g2d.setXORMode(Color.WHITE);
+            }
+            
             g2d.drawImage(barImg, x, y, null); 
+            
+            // Draw Interpretation Line
+            if (bc.isPrintInterpretationLine()) {
+                // Clear XOR for text if needed, or keep it? ZPL usually reverses text too.
+                // Standard ZPL interpretation line font is usually small Font 0.
+                int textHeight = (int) Math.max(10, bc.getHeight() * 0.15); // Rough guess for height if not specified
+                Font font = new Font(Font.SANS_SERIF, Font.PLAIN, textHeight);
+                // Apply condensation to match our text drawer
+                AffineTransform at = new AffineTransform();
+                at.scale(0.75, 1.0);
+                g2d.setFont(font.deriveFont(at));
+                
+                String labelText = content; 
+                java.awt.FontMetrics fm = g2d.getFontMetrics();
+                int textX = x + (finalWidth - fm.stringWidth(labelText)) / 2;
+                int textY = y + finalHeight + fm.getAscent();
+                
+                if (bc.isPrintInterpretationLineAbove()) {
+                     textY = y - fm.getDescent();
+                }
+                
+                g2d.drawString(labelText, textX, textY);
+            }
+            
+            if (bc.isReverseDraw()) {
+                g2d.setPaintMode();
+            }
             
         } catch (Exception e) {
              g2d.drawString("ERR: " + e.getMessage(), bc.getPositionX(), bc.getPositionY());

@@ -23,8 +23,9 @@ public class ZplElementDrawer {
     }
 
     public BufferedImage draw(List<ZplElementBase> elements, double labelWidthMm, double labelHeightMm, int dpmm) {
-        int widthPx = (int) Math.round(labelWidthMm * dpmm * RENDER_SCALE);
-        int heightPx = (int) Math.round(labelHeightMm * dpmm * RENDER_SCALE);
+        // Add small safety padding to avoid edge cropping on right/bottom
+        int widthPx = (int) Math.round((labelWidthMm * dpmm + 5) * RENDER_SCALE); 
+        int heightPx = (int) Math.round((labelHeightMm * dpmm + 5) * RENDER_SCALE);
 
         BufferedImage image = new BufferedImage(widthPx, heightPx, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();
