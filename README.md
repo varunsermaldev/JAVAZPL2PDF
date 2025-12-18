@@ -76,9 +76,3 @@ To publish this library to Maven Central, follow these steps:
 ```powershell
 mvn clean deploy -P release
 ```
-
-> [!NOTE]
-> Make sure you have the `gpg` executable in your PATH.
-
-## License
-MIT License
