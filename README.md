@@ -15,7 +15,7 @@ Add the following dependency to your `pom.xml`:
 
 ```xml
 <dependency>
-    <groupId>com.zpl2pdf</groupId>
+    <groupId>io.github.varunsermaldev</groupId>
     <artifactId>JavaZPL2PDF</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -23,7 +23,7 @@ Add the following dependency to your `pom.xml`:
 
 ### Gradle
 ```gradle
-implementation 'com.zpl2pdf:JavaZPL2PDF:1.0.0'
+implementation 'io.github.varunsermaldev:JavaZPL2PDF:1.0.0'
 ```
 
 ## Usage
@@ -74,5 +74,10 @@ To publish this library to Maven Central, follow these steps:
 3. **Execute Publish Command**:
 
 ```powershell
-mvn clean deploy -P release
+mvn clean verify -Prelease org.sonatype.central:central-publishing-maven-plugin:publish
 ```
+
+> [!IMPORTANT]
+> **Release Requirements:**
+> 1. **GPG Installed:** You must have GPG installed and in your PATH. If you get a "gpgVersion is null" error, ensure `gpg --version` works in your terminal.
+> 2. **OSSRH Credentials:** Ensure your `~/.m2/settings.xml` has the `<server>` entry for `central`.
